@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, flashes %}
+{% block body_class %}app-body{% endblock %}
+{% block body %}
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="{{ url_for('dashboard') }}" class="brand">
+      <span class="brand-mark">{{ icon('shield', 24) }}</span> SecureLocker
+    </a>
+    <nav class="nav">
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active == 'dashboard' }}">{{ icon('home') }} Dashboard</a>
+      <a href="{{ url_for('upload_page') }}" class="{{ 'active' if active == 'upload' }}">{{ icon('upload') }} Upload Files</a>
+      <a href="{{ url_for('files_page') }}" class="{{ 'active' if active == 'files' }}">{{ icon('folder') }} My Secure Files</a>
+      <a href="{{ url_for('activity_page') }}" class="{{ 'active' if active == 'activity' }}">{{ icon('clock') }} Activity History</a>
+      <a href="{{ url_for('settings') }}" class="{{ 'active' if active == 'settings' }}">{{ icon('settings') }} Profile &amp; Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <span class="avatar">{{ session.name[:1]|upper }}</span>
+        <div>
+          <strong>{{ session.name }}</strong>
+          <small>{{ session.email }}</small>
+        </div>
+      </div>
+      <form method="post" action="{{ url_for('logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost btn-block" type="submit">{{ icon('logout', 18) }} Logout</button>
+      </form>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">{{ icon('menu') }}</button>
+      <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+      <span class="status-pill">{{ icon('lock', 14) }} Encrypted session</span>
+    </header>
+    <main class="content">
+      {{ flashes() }}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

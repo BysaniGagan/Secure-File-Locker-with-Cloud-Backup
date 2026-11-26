@@ -1,0 +1,15 @@
+{% extends "auth_base.html" %}
+{% block title %}Forgot password{% endblock %}
+{% block auth_content %}
+<h2>Reset your password</h2>
+<p class="muted">Enter your email and Firebase will send you a reset link.</p>
+<form method="post" class="form" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label class="field">
+    <span>Email</span>
+    <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+  </label>
+  <button class="btn btn-primary btn-block" type="submit">Send reset link</button>
+</form>
+<p class="auth-switch"><a href="{{ url_for('login') }}">&larr; Back to login</a></p>
+{% endblock %}

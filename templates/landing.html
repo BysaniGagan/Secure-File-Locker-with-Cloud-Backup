@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, flashes %}
+{% block title %}Home{% endblock %}
+{% block body_class %}landing-body{% endblock %}
+{% block body %}
+<header class="land-nav">
+  <a href="{{ url_for('landing') }}" class="brand"><span class="brand-mark">{{ icon('shield', 24) }}</span> SecureLocker</a>
+  <nav class="land-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    {% if session.uid %}
+      <a class="btn btn-primary" href="{{ url_for('dashboard') }}">Dashboard</a>
+    {% else %}
+      <a class="btn btn-ghost" href="{{ url_for('login') }}">Login</a>
+      <a class="btn btn-primary" href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+  </nav>
+</header>
+
+<div class="land-flash">{{ flashes() }}</div>
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">College Mini Project &bull; Cybersecurity</span>
+    <h1>Secure File Locker <span class="grad">with Cloud Backup</span></h1>
+    <p>Your files are encrypted with <strong>AES-256-GCM</strong> on our server before they ever reach the cloud.
+       Store, download and delete them safely &mdash; only you can read them.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}">Get started free</a>
+      <a class="btn btn-ghost btn-lg" href="{{ url_for('login') }}">I have an account</a>
+    </div>
+    <ul class="hero-badges">
+      <li>{{ icon('check', 16) }} Military-grade encryption</li>
+      <li>{{ icon('check', 16) }} Firebase cloud backup</li>
+      <li>{{ icon('check', 16) }} Tamper detection</li>
+    </ul>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="vault">
+      <div class="vault-ring"></div>
+      <div class="vault-core">{{ icon('lock', 64) }}</div>
+      <div class="chip c1">report.pdf &rarr; <b>.enc</b></div>
+      <div class="chip c2">AES-256-GCM</div>
+      <div class="chip c3">Backup &#10003;</div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section">
+  <h2>Everything you need to protect your files</h2>
+  <div class="grid-3">
+    <article class="card feature">
+      <span class="f-icon">{{ icon('lock', 26) }}</span>
+      <h3>AES-256-GCM Encryption</h3>
+      <p>Every file gets a unique random nonce and is encrypted on the backend before upload.</p>
+    </article>
+    <article class="card feature">
+      <span class="f-icon">{{ icon('cloud', 26) }}</span>
+      <h3>Cloud Backup</h3>
+      <p>Encrypted files are stored in Firebase Storage, so they are safe and available anywhere.</p>
+    </article>
+    <article class="card feature">
+      <span class="f-icon">{{ icon('key', 26) }}</span>
+      <h3>Secure Key Management</h3>
+      <p>Keys never touch the database or storage. A separate key is derived for each user.</p>
+    </article>
+    <article class="card feature">
+      <span class="f-icon">{{ icon('shield', 26) }}</span>
+      <h3>Integrity Verification</h3>
+      <p>Tampered or corrupted files are detected automatically when you decrypt them.</p>
+    </article>
+    <article class="card feature">
+      <span class="f-icon">{{ icon('user', 26) }}</span>
+      <h3>Private by Design</h3>
+      <p>Every upload, download and delete is authenticated and checked against your account.</p>
+    </article>
+    <article class="card feature">
+      <span class="f-icon">{{ icon('clock', 26) }}</span>
+      <h3>Activity History</h3>
+      <p>See exactly when files were uploaded, downloaded or deleted.</p>
+    </article>
+  </div>
+</section>
+
+<section id="how" class="section">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><span>1</span><div><h3>Upload</h3><p>Choose a file in your browser.</p></div></li>
+    <li><span>2</span><div><h3>Encrypt</h3><p>Python encrypts it with AES-256-GCM.</p></div></li>
+    <li><span>3</span><div><h3>Back up</h3><p>Only ciphertext goes to Firebase Storage.</p></div></li>
+    <li><span>4</span><div><h3>Download</h3><p>Decrypted and verified on request.</p></div></li>
+  </ol>
+</section>
+
+<footer class="land-foot">
+  <p>&copy; Secure File Locker with Cloud Backup &mdash; Flask &bull; Firebase &bull; cryptography</p>
+</footer>
+{% endblock %}

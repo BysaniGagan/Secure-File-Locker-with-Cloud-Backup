@@ -1,0 +1,34 @@
+{% extends "auth_base.html" %}
+{% block title %}Register{% endblock %}
+{% block auth_content %}
+<h2>Create your account</h2>
+<p class="muted">Start protecting your files in seconds.</p>
+<form method="post" class="form" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label class="field">
+    <span>Full name</span>
+    <input type="text" name="full_name" value="{{ request.form.get('full_name','') }}" required maxlength="80" autocomplete="name" placeholder="Your full name">
+  </label>
+  <label class="field">
+    <span>Email</span>
+    <input type="email" name="email" value="{{ request.form.get('email','') }}" required autocomplete="email" placeholder="you@example.com">
+  </label>
+  <label class="field">
+    <span>Password</span>
+    <div class="pw-wrap">
+      <input type="password" name="password" id="pw1" required minlength="8" autocomplete="new-password" placeholder="Min 8 chars, letter + number">
+      <button type="button" class="pw-toggle" data-target="pw1">Show</button>
+    </div>
+    <div class="strength" id="strength"><i></i></div>
+  </label>
+  <label class="field">
+    <span>Confirm password</span>
+    <div class="pw-wrap">
+      <input type="password" name="confirm_password" id="pw2" required autocomplete="new-password" placeholder="Repeat password">
+      <button type="button" class="pw-toggle" data-target="pw2">Show</button>
+    </div>
+  </label>
+  <button class="btn btn-primary btn-block" type="submit">Create account</button>
+</form>
+<p class="auth-switch">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "app_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<section class="welcome card">
+  <div>
+    <h2>Welcome back, {{ session.name.split(' ')[0] }} &#128075;</h2>
+    <p class="muted">Your files are encrypted with AES-256-GCM before they leave the server.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('upload_page') }}">{{ icon('upload', 18) }} Quick Upload</a>
+</section>
+
+<section class="stats">
+  <article class="card stat">
+    <span class="stat-icon">{{ icon('file', 22) }}</span>
+    <div><small>Total uploaded files</small><strong>{{ total_files }}</strong></div>
+  </article>
+  <article class="card stat">
+    <span class="stat-icon">{{ icon('database', 22) }}</span>
+    <div><small>Encrypted storage used</small><strong>{{ total_bytes|filesize }}</strong></div>
+  </article>
+  <article class="card stat">
+    <span class="stat-icon {{ 'ok' if backup_ok else 'warn' }}">{{ icon('cloud', 22) }}</span>
+    <div>
+      <small>Cloud backup status</small>
+      <strong class="{{ 'text-ok' if backup_ok else 'text-warn' }}">
+        {{ ('All files backed up' if total_files else 'Ready') if backup_ok else 'Attention needed' }}
+      </strong>
+    </div>
+  </article>
+  <article class="card stat">
+    <span class="stat-icon">{{ icon('lock', 22) }}</span>
+    <div><small>Encryption</small><strong>AES-256-GCM</strong></div>
+  </article>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h3>Recent activity</h3>
+    <a href="{{ url_for('activity_page') }}">View all</a>
+  </div>
+  {% if activities %}
+  <ul class="timeline">
+    {% for a in activities %}
+    <li>
+      <span class="dot dot-{{ a.activity_type }}"></span>
+      <div>
+        <strong>File {{ a.activity_type }}</strong>
+        <span class="fname">{{ a.file_name }}</span>
+      </div>
+      <time>{{ a.timestamp|dt }}</time>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty">
+    {{ icon('clock', 36) }}
+    <p>No activity yet. Upload your first file to get started.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

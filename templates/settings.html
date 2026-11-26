@@ -1,0 +1,39 @@
+{% extends "app_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Profile &amp; Settings{% endblock %}
+{% block page_title %}Profile &amp; Settings{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <section class="card">
+    <h3>{{ icon('user', 20) }} Your profile</h3>
+    <dl class="info">
+      <div><dt>Full name</dt><dd>{{ profile.full_name or session.name }}</dd></div>
+      <div><dt>Email</dt><dd>{{ profile.email or session.email }}</dd></div>
+      <div><dt>Member since</dt><dd>{{ profile.created_at|dt }}</dd></div>
+      <div><dt>Encryption</dt><dd>AES-256-GCM (per-user derived key)</dd></div>
+    </dl>
+    <form method="post" action="{{ url_for('logout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-danger" type="submit">{{ icon('logout', 18) }} Logout</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h3>{{ icon('key', 20) }} Change password</h3>
+    <form method="post" class="form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="field"><span>Current password</span>
+        <div class="pw-wrap"><input type="password" name="current_password" id="cp" required autocomplete="current-password"><button type="button" class="pw-toggle" data-target="cp">Show</button></div>
+      </label>
+      <label class="field"><span>New password</span>
+        <div class="pw-wrap"><input type="password" name="new_password" id="np" required minlength="8" autocomplete="new-password"><button type="button" class="pw-toggle" data-target="np">Show</button></div>
+      </label>
+      <label class="field"><span>Confirm new password</span>
+        <div class="pw-wrap"><input type="password" name="confirm_password" id="np2" required autocomplete="new-password"><button type="button" class="pw-toggle" data-target="np2">Show</button></div>
+      </label>
+      <button class="btn btn-primary" type="submit">Update password</button>
+    </form>
+    <p class="hint">Your password is managed by Firebase Authentication and is never stored by this app.</p>
+  </section>
+</div>
+{% endblock %}

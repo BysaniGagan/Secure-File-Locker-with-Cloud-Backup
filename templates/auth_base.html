@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, flashes %}
+{% block body_class %}auth-body{% endblock %}
+{% block body %}
+<main class="auth-wrap">
+  <a href="{{ url_for('landing') }}" class="brand auth-brand">
+    <span class="brand-mark">{{ icon('shield', 26) }}</span> SecureLocker
+  </a>
+  <section class="auth-card">
+    {{ flashes() }}
+    {% block auth_content %}{% endblock %}
+  </section>
+  <p class="auth-foot">AES-256-GCM encrypted &bull; Firebase cloud backup</p>
+</main>
+{% endblock %}

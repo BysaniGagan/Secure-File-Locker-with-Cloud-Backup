@@ -1,0 +1,69 @@
+{% extends "app_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}My Secure Files{% endblock %}
+{% block page_title %}My Secure Files{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="toolbar">
+    <label class="search">
+      {{ icon('search', 18) }}
+      <input type="search" id="fileSearch" placeholder="Search files by name&hellip;" autocomplete="off">
+    </label>
+    <select id="fileFilter" aria-label="Filter by type">
+      <option value="all">All types</option>
+      <option value="doc">Documents</option>
+      <option value="image">Images</option>
+      <option value="media">Audio / Video</option>
+      <option value="archive">Archives</option>
+    </select>
+    <a class="btn btn-primary" href="{{ url_for('upload_page') }}">{{ icon('upload', 18) }} Upload</a>
+  </div>
+
+  {% if files %}
+  <div class="table-wrap">
+    <table class="table" id="filesTable">
+      <thead>
+        <tr><th>File name</th><th>Size</th><th>Uploaded</th><th>Encryption</th><th>Cloud backup</th><th class="right">Actions</th></tr>
+      </thead>
+      <tbody>
+      {% for f in files %}
+        <tr data-id="{{ f.file_id }}" data-name="{{ f.original_filename|lower }}">
+          <td data-label="File"><span class="file-cell">{{ icon('file', 18) }} <span class="fname">{{ f.original_filename }}</span></span></td>
+          <td data-label="Size">{{ f.file_size|filesize }}</td>
+          <td data-label="Uploaded">{{ f.upload_date|dt }}</td>
+          <td data-label="Encryption"><span class="badge badge-ok">{{ icon('lock', 12) }} {{ f.encryption_algorithm }}</span></td>
+          <td data-label="Backup">
+            <span class="badge {{ 'badge-ok' if f.backup_status == 'Completed' else 'badge-warn' }}">{{ icon('cloud', 12) }} {{ f.backup_status }}</span>
+          </td>
+          <td class="right actions">
+            <a class="btn btn-sm btn-ghost" href="{{ url_for('download', file_id=f.file_id) }}" title="Decrypt &amp; download">{{ icon('download', 16) }} Download</a>
+            <button class="btn btn-sm btn-danger" data-delete="{{ f.file_id }}" data-fname="{{ f.original_filename }}" title="Delete">{{ icon('trash', 16) }}</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="empty hidden" id="noMatch">No files match your search.</p>
+  {% else %}
+  <div class="empty">
+    {{ icon('folder', 40) }}
+    <p>You have no secure files yet.</p>
+    <a class="btn btn-primary" href="{{ url_for('upload_page') }}">Upload your first file</a>
+  </div>
+  {% endif %}
+</section>
+
+<div class="modal hidden" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="delTitle">
+  <div class="modal-box">
+    <span class="modal-icon">{{ icon('alert', 28) }}</span>
+    <h3 id="delTitle">Delete this file?</h3>
+    <p class="muted"><b id="delName"></b> will be permanently removed from cloud storage. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="delCancel">Cancel</button>
+      <button class="btn btn-danger-solid" id="delConfirm">Delete permanently</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/files.js') }}"></script>{% endblock %}

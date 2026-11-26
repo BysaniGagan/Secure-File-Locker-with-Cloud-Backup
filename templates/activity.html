@@ -1,0 +1,26 @@
+{% extends "app_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Activity History{% endblock %}
+{% block page_title %}Activity History{% endblock %}
+{% block content %}
+<section class="card">
+  {% if activities %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Activity</th><th>File</th><th>Date &amp; time</th></tr></thead>
+      <tbody>
+      {% for a in activities %}
+        <tr>
+          <td data-label="Activity"><span class="badge badge-{{ a.activity_type }}">{{ a.activity_type|capitalize }}</span></td>
+          <td data-label="File"><span class="fname">{{ a.file_name or a.file_id }}</span></td>
+          <td data-label="When">{{ a.timestamp|dt }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">{{ icon('clock', 40) }}<p>No activity recorded yet.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

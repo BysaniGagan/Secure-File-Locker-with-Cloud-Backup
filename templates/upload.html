@@ -1,0 +1,36 @@
+{% extends "app_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Upload Files{% endblock %}
+{% block page_title %}Upload Files{% endblock %}
+{% block content %}
+<section class="card">
+  <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose files to upload">
+    <span class="dz-icon">{{ icon('upload', 40) }}</span>
+    <h3>Drag &amp; drop files here</h3>
+    <p class="muted">or</p>
+    <button type="button" class="btn btn-primary" id="browseBtn">Browse files</button>
+    <input type="file" id="fileInput" multiple hidden>
+    <p class="hint">Max {{ max_upload_mb }} MB per file &bull; Allowed: {{ allowed_ext|join(', ') }}</p>
+  </div>
+</section>
+
+<section id="queue" class="queue" aria-live="polite"></section>
+
+<section class="card info-card">
+  <h3>{{ icon('shield', 20) }} What happens when you upload</h3>
+  <ol class="mini-steps">
+    <li>File is sent securely to the server.</li>
+    <li>Python encrypts it with <b>AES-256-GCM</b> (unique random nonce).</li>
+    <li>Only the encrypted file is stored in Firebase Storage.</li>
+  </ol>
+</section>
+
+<script>
+  window.UPLOAD_CONFIG = {
+    maxBytes: {{ max_upload_mb }} * 1024 * 1024,
+    allowed: {{ allowed_ext|tojson }},
+    filesUrl: "{{ url_for('files_page') }}"
+  };
+</script>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/upload.js') }}"></script>{% endblock %}
